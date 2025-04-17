@@ -14,7 +14,6 @@ db_password = 'your_password'
 # --- SET THESE ---
 db_user = 'postgres'
 db_password = 'your password'
->>>>>>> 9c2eedd (Update load.py to create database and upload cleaned data)
 db_host = 'localhost'
 db_port = '5432'
 db_name = 'trends_db'  # The target database to create
