@@ -2,7 +2,7 @@
 from sqlalchemy import create_engine
 
 # Load the CSV file
-df = pd.read_csv("updateThis.csv") ## Update this
+dff = pd.read_csv("updateThis.csv") ## Update this
 
 # PostgreSQL credentials Update This
 db_user = 'your_username'
