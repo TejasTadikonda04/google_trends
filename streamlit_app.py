@@ -1,5 +1,5 @@
 # Word cloud
-import streamlit as st
+import streamlit_app as st
 import pandas as pd
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
