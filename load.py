@@ -1,16 +1,15 @@
-import pandas as pd
+﻿import pandas as pd
 import psycopg2
 from sqlalchemy import create_engine
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
-<<<<<<< HEAD
 # Load the CSV file
 df = pd.read_csv("./actualDataTeamProject.csv")
 
 # PostgreSQL credentials Update This
 db_user = 'your_username'
 db_password = 'your_password'
-=======
+
 # --- SET THESE ---
 db_user = 'postgres'
 db_password = 'your password'
