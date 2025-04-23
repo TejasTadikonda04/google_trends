@@ -23,6 +23,16 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# === LATIN SCRIPT COUNTRIES ===
+latin_script_countries = [
+    'Brazil', 'Belgium', 'United Kingdom', 'Norway', 'Italy', 'Portugal',
+    'Netherlands', 'Poland', 'Mexico', 'Nigeria', 'South Africa', 'Austria',
+    'Chile', 'Finland', 'Philippines', 'Canada', 'Spain', 'Germany',
+    'Colombia', 'Argentina', 'Czech Republic', 'New Zealand', 'France',
+    'Switzerland', 'Ukraine', 'Australia', 'Sweden', 'Romania', 'Hungary',
+    'Denmark', 'Israel'
+]
+
 # === DATABASE SETUP FOR COUNTRY & REGION ===
 try:
     import collections.abc as abc
@@ -107,7 +117,14 @@ if page == "🌍 Country-Level Stats":
             st.metric(label="Term", value=top_term, delta=f"Appeared {top_count} times")
     with right_col:
         st.subheader(f"☁️ Word Cloud: {selected_country}")
-        text = " ".join(df_country[term_col].dropna().astype(str))
+
+        # Latin-script logic
+        if selected_country in latin_script_countries:
+            wordcloud_col = term_col  # Respect the toggle
+        else:
+            wordcloud_col = 'translate'  # Force English for non-Latin
+
+        text = " ".join(df_country[wordcloud_col].dropna().astype(str))
         if text:
             wordcloud = WordCloud(width=400, height=200, background_color='white').generate(text)
             plt.figure(figsize=(6, 3))
@@ -126,6 +143,7 @@ if page == "🌍 Country-Level Stats":
         html += f"<tr><td style='white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'>{term}</td><td><div style='background:#333;border-radius:4px;height:8px;overflow:hidden;'><div style='background:#1f77b4;width:{pct}%;height:100%;'></div></div></td></tr>"
     html += "</tbody></table></div>"
     st.markdown(html, unsafe_allow_html=True)
+
 
 # === REGION-LEVEL PAGE ===
 elif page == "📍 Region-Level Stats":
