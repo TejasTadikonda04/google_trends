@@ -7,12 +7,12 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 df = pd.read_csv("./actualDataTeamProject.csv")
 
 # PostgreSQL credentials Update This
-db_user = 'your_username'
-db_password = 'your_password'
+db_user = 'postgres'
+db_password = 'Titanic29!'
 
 # --- SET THESE ---
 db_user = 'postgres'
-db_password = 'your password'
+db_password = 'Titanic29!'
 db_host = 'localhost'
 db_port = '5432'
 db_name = 'trends_db'  # The target database to create
@@ -46,7 +46,7 @@ except Exception as e:
     exit()
 
 # --- Step 2: Load CSV and Upload to Target Database ---
-df = pd.read_csv("cleaned_google_trends.csv")
+df = pd.read_csv("actualDataTeamProject.csv")
 
 # Create connection engine to the new database
 engine = create_engine(f'postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}')
