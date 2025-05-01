@@ -8,11 +8,11 @@ df = pd.read_csv("./actualDataTeamProject.csv")
 
 # PostgreSQL credentials Update This
 db_user = 'postgres'
-db_password = 'Titanic29!'
+db_password = 'password'
 
 # --- SET THESE ---
 db_user = 'postgres'
-db_password = 'Titanic29!'
+db_password = 'password'
 db_host = 'localhost'
 db_port = '5432'
 db_name = 'trends_db'  # The target database to create
