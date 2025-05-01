@@ -3,3 +3,6 @@ pandas
 streamlit
 wordcloud
 plotly
+sqlalchemy
+pycountry
+psycopg2
