@@ -1,8 +1,9 @@
-matplotlib
-pandas
 streamlit
-wordcloud
+pandas
 plotly
+streamlit-plotly-events
 sqlalchemy
+psycopg2-binary
+wordcloud
+matplotlib
 pycountry
-psycopg2
