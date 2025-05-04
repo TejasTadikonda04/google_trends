@@ -1,18 +1,7 @@
 version: '3.9'
 
 services:
-  streamlit:
-    build: .
-    container_name: streamlit_app
-    ports:
-      - "8501:8501"
-    volumes:
-      - .:/app
-    environment:
-      - PYTHONUNBUFFERED=1
-    restart: unless-stopped
-
-    db:
+  db:
     image: postgres:15
     container_name: postgres
     ports:
@@ -24,6 +13,38 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
     restart: unless-stopped
+
+  streamlit:
+    build: .
+    container_name: streamlit_app
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}      
+      - DB_USER=${DB_USER}      
+      - DB_PASS=${DB_PASS}      
+    restart: unless-stopped
+
+  etl:
+    build: .
+    container_name: etl_service
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}      
+      - DB_USER=${DB_USER}      
+      - DB_PASS=${DB_PASS} 
+    command: python load.py  
+    restart: on-failure
 
 volumes:
   pgdata:
