@@ -388,7 +388,7 @@ def perform_fuzzy_matching(df):
         print(counts)
     else:
         print("No poor matches found or 'country' column missing.")
-
+        
 def clean_data(df):
     df = validate_dates(df, ['week', 'refresh_date'])
     df = clean_region_names(df)
@@ -399,6 +399,38 @@ def clean_data(df):
 if __name__ == "__main__":
     df = pd.read_csv("actualDataTeamProject.csv")
     df = clean_data(df)
+
+    print("NaN values per column:\n", df.isna().sum())
+
+    # Date validation details
+    date_validation = {
+        col: {
+            'valid': df[col].notna().all(),
+            'invalid_entries': df[df[col].isna()][col].tolist()
+        }
+        for col in ['week', 'refresh_date']
+    }
+    print(date_validation)
+
+    # Country name/code mismatches
+    country_reference = pd.DataFrame({
+        'country_name': ['Brazil', 'Belgium', 'India', 'Japan', 'United Kingdom', 'Indonesia',
+                         'Thailand', 'Norway', 'South Korea', 'Italy', 'Malaysia', 'Portugal',
+                         'Netherlands', 'Poland', 'Vietnam', 'Mexico', 'Nigeria', 'South Africa',
+                         'Austria', 'Chile', 'Finland', 'Philippines', 'Canada', 'Spain', 'Germany',
+                         'Colombia', 'Argentina', 'Taiwan', 'Czech Republic', 'New Zealand', 'France',
+                         'Switzerland', 'Ukraine', 'Australia', 'Sweden', 'Saudi Arabia', 'Turkey',
+                         'Egypt', 'Romania', 'Hungary', 'Denmark', 'Israel'],
+        'country_code': ['BR', 'BE', 'IN', 'JP', 'GB', 'ID', 'TH', 'NO', 'KR', 'IT', 'MY', 'PT', 'NL', 'PL',
+                         'VN', 'MX', 'NG', 'ZA', 'AT', 'CL', 'FI', 'PH', 'CA', 'ES', 'DE', 'CO', 'AR', 'TW',
+                         'CZ', 'NZ', 'FR', 'CH', 'UA', 'AU', 'SE', 'SA', 'TR', 'EG', 'RO', 'HU', 'DK', 'IL']
+    })
+    merged = df.merge(country_reference, on='country_name', how='left', suffixes=('', '_ref'))
+    mismatches = merged[merged['country_code'] != merged['country_code_ref']]
+    print("Mismatched rows:")
+    print(mismatches[['country_name', 'country_code', 'country_code_ref']])
+
     df.to_csv("google_trends_cleaned.csv", index=False)
     print("Data cleaned and saved to google_trends_cleaned.csv")
+
 
