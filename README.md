@@ -5,8 +5,6 @@ This project utilized the google trends international dataset, which contains th
 ## Environment Setup
 
 Before running the project, copy the example environment file:
-
-```bash
 cp .env.sample .env
 
 
