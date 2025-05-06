@@ -1,9 +1,9 @@
 import os
 import pandas as pd
 import psycopg2
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-from transform import clean_data  # Make sure transform.py is in the same directory
+from transform import clean_data  # Ensure transform.py is in the same directory
 
 # === CONFIG ===
 DB_ADMIN_DB = os.getenv("DB_ADMIN_DB", "postgres")
@@ -57,11 +57,67 @@ except Exception as e:
     print("❌ Merge failed:", e)
     exit(1)
 
-# === UPLOAD TO POSTGRES ===
+# === CONNECT TO POSTGRES ===
 engine = create_engine(f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{TARGET_DB}")
+
 try:
+    # Upload combined table for Streamlit use
     df.to_sql(TABLE_NAME, engine, index=False, if_exists="replace")
     print(f"✅ Data uploaded to table '{TABLE_NAME}' in database '{TARGET_DB}'.")
+
+    # Prepare normalized dataframes
+    countries_df = df[["country_code", "country_name"]].drop_duplicates()
+    regions_df = df[["region_name", "country_code", "region_name_cleaned", "region_name_final"]].drop_duplicates()
+    terms_df = df[["term", "translate", "final_term"]].drop_duplicates()
+    trends_df = df[["term", "region_name", "country_code", "week", "score", "refresh_date", "rank"]].drop_duplicates()
+
+    # Explicit schema creation for foreign key compatibility
+    with engine.begin() as conn:
+        conn.execute(text("""
+            DROP TABLE IF EXISTS trends, regions, countries, terms CASCADE;
+
+            CREATE TABLE countries (
+                country_code TEXT PRIMARY KEY,
+                country_name TEXT
+            );
+
+            CREATE TABLE regions (
+                region_name TEXT,
+                country_code TEXT,
+                region_name_cleaned TEXT,
+                region_name_final TEXT,
+                PRIMARY KEY (region_name, country_code),
+                FOREIGN KEY (country_code) REFERENCES countries(country_code)
+            );
+
+            CREATE TABLE terms (
+                term TEXT PRIMARY KEY,
+                translate TEXT,
+                final_term TEXT
+            );
+
+            CREATE TABLE trends (
+                trend_id SERIAL PRIMARY KEY,
+                region_name TEXT,
+                country_code TEXT,
+                term TEXT,
+                week DATE,
+                score DOUBLE PRECISION,
+                refresh_date DATE,
+                rank INTEGER,
+                FOREIGN KEY (region_name, country_code) REFERENCES regions(region_name, country_code),
+                FOREIGN KEY (term) REFERENCES terms(term)
+            );
+        """))
+
+    # Insert normalized data
+    countries_df.to_sql("countries", engine, index=False, if_exists="append")
+    regions_df.to_sql("regions", engine, index=False, if_exists="append")
+    terms_df.to_sql("terms", engine, index=False, if_exists="append")
+    trends_df.to_sql("trends", engine, index=False, if_exists="append")
+
+    print("✅ Normalized ERD tables created and populated.")
+
 except Exception as e:
-    print(f"❌ Failed to upload data to '{TABLE_NAME}':", e)
+    print(f"❌ Failed to upload data to PostgreSQL:", e)
     exit(1)
