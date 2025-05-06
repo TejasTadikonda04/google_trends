@@ -9,7 +9,7 @@ cp .env.sample .env
 
 
 ## Instructions:
-In your terminal, change the directory to the folder that contains the information in this github repository. Once you are in that specific directory, simply run the command "docker-compose up --build". Once this command is entered, the etl, postgreSQL, and streamlit containers should begin running. Once all containers have run, navigate to the website "http://localhost:8501" to access the streamlit dashboard.
+To run the project, first clone the repository by executing git clone https://github.com/TejasTadikonda04/google_trends in your terminal. After cloning, navigate into the project directory using cd google_trends. Once inside, create a copy of the environment configuration by running cp .env.sample .env. This will generate a .env file containing the default environment variables required by Docker. Next, run docker-compose up --build to build and launch all services: the ETL pipeline, PostgreSQL database, and Streamlit dashboard. Once all containers are running successfully, open your browser and go to http://localhost:8501 to access the interactive dashboard.
 
 ## Screenshot of Streamlit dashboard:
 ![Alt text](/streamlit_screenshot.png)
@@ -21,4 +21,4 @@ Ryan Rosario - I helped with the ETL process by validating whether the translate
 
 Andy Rodriguez - I helped with the transformation part of the ETL process, specifically with checking if each country alligned with both their country and region code. Additionally, I assisted with the creation of the postgreSQL container.
 
-Gabriel Gonzalez
+Gabriel Gonzalez - I worked on the transformation/cleaning, loading the cleaned dataset into postgres, the streamlit app, and tweaking code to make it Docker friendly. 
