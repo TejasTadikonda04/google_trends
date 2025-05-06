@@ -61,7 +61,7 @@ except Exception as e:
 engine = create_engine(f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{TARGET_DB}")
 
 try:
-    # Upload combined table for Streamlit use
+    # Upload combined table for sanity check
     df.to_sql(TABLE_NAME, engine, index=False, if_exists="replace")
     print(f"✅ Data uploaded to table '{TABLE_NAME}' in database '{TARGET_DB}'.")
 

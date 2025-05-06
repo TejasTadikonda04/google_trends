@@ -110,11 +110,23 @@ def load_csv_data():
 @st.cache_data
 def get_postgres_data():
     query = """
-    SELECT country_name, country_code, region_name, region_name_final, term, translate, week, rank
-    FROM google_trends_international_cleaned
-    WHERE rank BETWEEN 1 AND 5
+    SELECT 
+        c.country_name,
+        c.country_code,
+        r.region_name,
+        r.region_name_final,
+        t.term,
+        t.translate,
+        tr.week,
+        tr.rank
+    FROM trends tr
+    JOIN countries c ON tr.country_code = c.country_code
+    JOIN regions r ON tr.region_name = r.region_name AND tr.country_code = r.country_code
+    JOIN terms t ON tr.term = t.term
+    WHERE tr.rank BETWEEN 1 AND 5
     """
     return pd.read_sql(query, engine)
+
 
 # === HELPER FUNCTIONS ===
 def iso2_to_iso3(code):
