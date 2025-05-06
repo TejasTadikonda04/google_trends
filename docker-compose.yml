@@ -9,9 +9,9 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
-    - DB_NAME=${DB_NAME}
-    - DB_USER=${DB_USER}
-    - DB_PASS=${DB_PASS}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
     restart: unless-stopped
 
   streamlit:
@@ -21,6 +21,7 @@ services:
       - "8501:8501"
     volumes:
       - .:/app
+      - ./Country Regions:/app/Country Regions 
     environment:
       - PYTHONUNBUFFERED=1
       - DB_HOST=${DB_HOST}

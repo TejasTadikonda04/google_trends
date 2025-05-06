@@ -15,7 +15,7 @@ def clean_region_names(df):
         "County", "Province", "State of", "State", "Governorate",
         "Region", "Special Region", "District", "City", "Prefecture", "Oblast"
     ]
-    admin_pattern = re.compile(r'\\b(?:' + '|'.join(re.escape(w) for w in admin_words) + r')\\b', re.IGNORECASE)
+    admin_pattern = re.compile(r'\b(?:' + '|'.join(re.escape(w) for w in admin_words) + r')\b', re.IGNORECASE)
     df["region_name_cleaned"] = df["region_name"].apply(
         lambda x: re.sub(r"\\s+", "", admin_pattern.sub("", x)) if isinstance(x, str) else x
     )
@@ -337,6 +337,7 @@ def apply_manual_fixes(df):
     df["region_name_final"] = df["region_name_cleaned"].apply(
         lambda x: region_fix_map.get(x, x)
     )
+    df["region_name_final"] = df["region_name_final"].str.replace(r"\s+", "", regex=True)
     return df
 
 def perform_fuzzy_matching(df):
