@@ -9,7 +9,7 @@ cp .env.sample .env
 
 
 ## Instructions:
-To run the project, first clone the repository by executing git clone https://github.com/TejasTadikonda04/google_trends in your terminal. After cloning, navigate into the project directory using cd google_trends. Once inside, create a copy of the environment configuration by running cp .env.sample .env. This will generate a .env file containing the default environment variables required by Docker. Next, run docker-compose up --build to build and launch all services: the ETL pipeline, PostgreSQL database, and Streamlit dashboard. Once all containers are running successfully, open your browser and go to http://localhost:8501 to access the interactive dashboard.
+To run the project, first clone the repository by executing `git clone https://github.com/TejasTadikonda04/google_trends` in your terminal. After cloning, navigate into the project directory using `cd google_trends`. Once inside, create a copy of the environment configuration by running `cp .env.sample .env`. This will generate a `.env` file containing the default environment variables required by Docker. Next, run `docker-compose up --build` to build and launch all services: the ETL pipeline, PostgreSQL database, and Streamlit dashboard. Once all containers are running successfully, open your browser and go to `http://localhost:8501` to access the interactive dashboard.
 
 ## Screenshot of Streamlit dashboard:
 ![Alt text](/streamlit_screenshot.png)
