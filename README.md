@@ -17,7 +17,7 @@ In your terminal, change the directory to the folder that contains the informati
 
 Tejas Tadikonda - 
 
-Ryan Rosario - 
+Ryan Rosario - I helped with the ETL process by validating whether the translated terms were translate correctly. I also created the transformation and DBSCAN algorithm to create collections of similar words to use for the top countries by term visualization.
 
 Andy Rodriguez - I helped with the transformation part of the ETL process, specifically with checking if each country alligned with both their country and region code. Additionally, I assisted with the creation of the postgreSQL container.
 
