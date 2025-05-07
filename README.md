@@ -10,7 +10,7 @@ To run the project, first clone the repository by executing `git clone https://g
 ![Alt text](/streamlit_screenshot.png)
 ## Contributions:
 
-Tejas Tadikonda - 
+Tejas Tadikonda - I set up the GitHub repository, created the streamlit container, created a word cloud visualization, and validated the date columns in the dataset to make sure they were all properly formatted. 
 
 Ryan Rosario - I helped with the ETL process by validating whether the translated terms were translate correctly. I also created the transformation and DBSCAN algorithm to create collections of similar words to use for the top countries by term visualization.
 
