@@ -13,10 +13,35 @@ services:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 5s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
+
+  etl:
+    build: .
+    container_name: etl_service
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    environment:
+      - DB_HOST=db
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}      
+      - DB_USER=${DB_USER}      
+      - DB_PASS=${DB_PASS} 
+    command: python load.py  
+    restart: on-failure
 
   streamlit:
     build: .
     container_name: streamlit_app
+    depends_on:
+      - etl
     ports:
       - "8501:8501"
     volumes:
@@ -24,29 +49,13 @@ services:
       - ./Country Regions:/app/Country Regions 
     environment:
       - PYTHONUNBUFFERED=1
-      - DB_HOST=${DB_HOST}
+      - DB_HOST=db
       - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}      
       - DB_USER=${DB_USER}      
       - DB_PASS=${DB_PASS}
       - CSV_PATH=${CSV_PATH}
     restart: unless-stopped
-
-  etl:
-    build: .
-    container_name: etl_service
-    depends_on:
-      - db
-    volumes:
-      - .:/app
-    environment:
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_NAME=${DB_NAME}      
-      - DB_USER=${DB_USER}      
-      - DB_PASS=${DB_PASS} 
-    command: python load.py  
-    restart: on-failure
 
 volumes:
   pgdata:

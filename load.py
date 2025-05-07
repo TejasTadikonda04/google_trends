@@ -61,6 +61,11 @@ except Exception as e:
 engine = create_engine(f"postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{TARGET_DB}")
 
 try:
+    # Drop and Recreate Main Combined Table
+    with engine.begin() as conn:
+        conn.execute(text(f"DROP TABLE IF EXISTS {TABLE_NAME} CASCADE;"))
+        print(f"✅ Dropped existing table '{TABLE_NAME}' if it existed.")
+
     # Upload combined table for sanity check
     df.to_sql(TABLE_NAME, engine, index=False, if_exists="replace")
     print(f"✅ Data uploaded to table '{TABLE_NAME}' in database '{TARGET_DB}'.")
@@ -109,6 +114,7 @@ try:
                 FOREIGN KEY (term) REFERENCES terms(term)
             );
         """))
+        print("✅ Normalized ERD tables recreated.")
 
     # Insert normalized data
     countries_df.to_sql("countries", engine, index=False, if_exists="append")
